@@ -25,7 +25,7 @@ export default function App() {
           items={items} 
           onDeleteItem={handleDeleteItem} 
           onToggleItem={handleToggleItem} />
-        <Stats />
+        <Stats items={items} />
       </div>
     </>
   )
@@ -115,11 +115,26 @@ function Item({ item, onDeleteItem, onToggleItem }) {
 }
 
 
-function Stats() {
+function Stats({ items }) {
+  
+  if(!items.length) return (
+    <p className="stats">
+      <em>Start adding ingredients to your grocery list</em>
+    </p>
+  )
+
+  const numItems = items.length;
+  const numChecked = items.filter((item) => item.checked).length;
+  const percentage = Math.round((numChecked / numItems) * 100);
+
   return(
     <footer className="stats">
-      You've got X items on the grocery list, 
-      and you've got X items already (X%)
+      <em>
+        {percentage === 100 ? 
+        'You have all the ingredients! Ready to cook?' :
+        `You've got ${numItems} items on the grocery list, 
+        and you've got ${numChecked} ingredients already (${percentage}%)`}
+      </em>
     </footer>
   )
 }
