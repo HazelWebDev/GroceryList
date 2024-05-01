@@ -84,18 +84,39 @@ function Form({onAddItems}) {
 }
 
 function CheckList({ items, onDeleteItem, onToggleItem }) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+
+  if (sortBy === "input") sortedItems = items;
+
+  if (sortBy === "alphabetical") 
+  sortedItems = 
+  items.slice().sort((a,b) => a.alphabetical.localeCompare(b.alphabetical));
+
+  if(sortBy === "checked") 
+  sortedItems = items.slice().sort((a,b) => Number(a.checked) - Number(b.checked));
+
   return(
     <div className="list">
       <ul>
-      {items.map((item) => (
-      <Item 
-      item={item} 
-      onDeleteItem={onDeleteItem}  
-      onToggleItem={onToggleItem}
-      key={item.id} 
-      />
-      ))}
+        {sortedItems.map((item) => (
+          <Item 
+          item={item} 
+          onDeleteItem={onDeleteItem}  
+          onToggleItem={onToggleItem}
+          key={item.id} 
+          />
+       ))}
     </ul>
+
+    <div className="actions">
+      <select value={sortBy} onChange={e=>setSortBy(e.target.value)}>
+        <option value="input">Sort by input</option>
+        <option value="alphabetical">Sort by alphabetical order</option>
+        <option value="checked">Sort by checked status</option>
+      </select>
+    </div>
    </div>
   )
 }
@@ -116,7 +137,7 @@ function Item({ item, onDeleteItem, onToggleItem }) {
 
 
 function Stats({ items }) {
-  
+
   if(!items.length) return (
     <p className="stats">
       <em>Start adding ingredients to your grocery list</em>
